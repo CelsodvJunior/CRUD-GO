@@ -1,5 +1,7 @@
 package rest_err
 
+import "net/http"
+
 type RestErr struct {
 	Message string   `json:"message"`
 	Err     string   `json:"error"`
@@ -12,8 +14,7 @@ type Causes struct {
 	Message string `json:"message"`
 }
 
-//Prar satisfazer a interface de error
-func (*RestErr) Error() string {
+func (r *RestErr) Error() string {
 	return r.Message
 }
 
@@ -26,9 +27,7 @@ func NewRestErr(message, err string, code int, causes []Causes) *RestErr {
 	}
 }
 
-// Metodos para erros
-func NewBadRequestError(massage string) *RestErr {
-
+func NewBadRequestError(message string) *RestErr {
 	return &RestErr{
 		Message: message,
 		Err:     "bad_request",
@@ -36,39 +35,45 @@ func NewBadRequestError(massage string) *RestErr {
 	}
 }
 
-func NewBadRequestValitationError(massage string, causes []Causes) *RestErr {
+func NewUnauthorizedRequestError(message string) *RestErr {
+
+	return &RestErr{
+		Message: message,
+		Err:     "unauthorized",
+		Code:    http.StatusUnauthorized,
+	}
+}
+
+func NewBadRequestValidationError(message string, causes []Causes) *RestErr {
 
 	return &RestErr{
 		Message: message,
 		Err:     "bad_request",
 		Code:    http.StatusBadRequest,
-		Causes: causes,
+		Causes:  causes,
 	}
 }
 
-func NewInternalSeverError(message string) *RestErr {
-		return &RestErr{
+func NewInternalServerError(message string) *RestErr {
+	return &RestErr{
 		Message: message,
-		Err:     "intenal_sever_error",
-		Code:    http.StatusBadRequest,
-		}
-
+		Err:     "internal_sever_error",
+		Code:    http.StatusInternalServerError,
+	}
 }
 
 func NewNotFoundError(message string) *RestErr {
-
-		return &RestErr{
+	return &RestErr{
 		Message: message,
 		Err:     "not_found",
-		Code:    http.StatusBadRequest,
-		}
+		Code:    http.StatusNotFound,
+	}
 }
 
 func NewForbiddenError(message string) *RestErr {
-
-		return &RestErr{
+	return &RestErr{
 		Message: message,
 		Err:     "forbidden",
-		Code:    http.StatusBadRequest,
-		}
+		Code:    http.StatusForbidden,
+	}
 }
