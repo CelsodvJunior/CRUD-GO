@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"Documentos/github.com/CelsodvJunior/CRUD-GO/src/configuration/rest_err"
+	"Documentos/github.com/CelsodvJunior/CRUD-GO/src/configuration/rest_err/validation"
 	"Documentos/github.com/CelsodvJunior/CRUD-GO/src/controller/model/request"
 	"fmt"
 	"log"
@@ -15,7 +15,7 @@ func CreateUser(c *gin.Context) {
 
 	if err := c.ShouldBindJSON(&userRequest); err != nil {
 		log.Printf("Error trying to marshal object, error=%s\n", err.Error())
-		errRest := rest_err.NewBadRequestError("Some fields are incorrect")
+		errRest := validation.ValidateUserError(err)
 
 		c.JSON(errRest.Code, errRest)
 		return
