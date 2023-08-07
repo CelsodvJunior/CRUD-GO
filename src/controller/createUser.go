@@ -4,12 +4,16 @@ import (
 	"Documentos/github.com/CelsodvJunior/CRUD-GO/src/configuration/logger"
 	"Documentos/github.com/CelsodvJunior/CRUD-GO/src/configuration/rest_err/validation"
 	"Documentos/github.com/CelsodvJunior/CRUD-GO/src/controller/model/request"
-	"Documentos/github.com/CelsodvJunior/CRUD-GO/src/controller/model/request/response"
+	"Documentos/github.com/CelsodvJunior/CRUD-GO/src/model"
 	"net/http"
 
 	"go.uber.org/zap"
 
 	"github.com/gin-gonic/gin"
+)
+
+var (
+	UserDomainInterface model.UserDomainInterface
 )
 
 func CreateUser(c *gin.Context) {
@@ -28,15 +32,20 @@ func CreateUser(c *gin.Context) {
 		return
 	}
 
-	response := response.UserResponse{
-		ID:    "test",
-		Email: userRequest.Email,
-		Name:  userRequest.Name,
-		Age:   userRequest.Age,
+	domain := model.NewUserDomain(
+		userRequest.Email,
+		userRequest.Password,
+		userRequest.Name,
+		userRequest.Age,
+	)
+
+	if err := domain.CreateUser(); err != nil {
+		c.JSON(err.Code, err)
+		return
 	}
 
 	logger.Info("User created sucessfully",
 		zap.String("journey", "CreateUser"),
 	)
-	c.JSON(http.StatusOK, response)
+	c.String(http.StatusOK, "")
 }
