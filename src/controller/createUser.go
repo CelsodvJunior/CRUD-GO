@@ -5,6 +5,7 @@ import (
 	"Documentos/github.com/CelsodvJunior/CRUD-GO/src/configuration/rest_err/validation"
 	"Documentos/github.com/CelsodvJunior/CRUD-GO/src/controller/model/request"
 	"Documentos/github.com/CelsodvJunior/CRUD-GO/src/model"
+	"Documentos/github.com/CelsodvJunior/CRUD-GO/src/model/service"
 	"net/http"
 
 	"go.uber.org/zap"
@@ -39,7 +40,9 @@ func CreateUser(c *gin.Context) {
 		userRequest.Age,
 	)
 
-	if err := domain.CreateUser(); err != nil {
+	service := service.NewUserDomainService()
+
+	if err := service.CreateUser(domain); err != nil {
 		c.JSON(err.Code, err)
 		return
 	}
