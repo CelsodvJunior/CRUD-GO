@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 
+	"Documentos/github.com/CelsodvJunior/CRUD-GO/src/configuration/database/mongdb"
 	"Documentos/github.com/CelsodvJunior/CRUD-GO/src/configuration/logger"
 	"Documentos/github.com/CelsodvJunior/CRUD-GO/src/controller"
 	"Documentos/github.com/CelsodvJunior/CRUD-GO/src/controller/routes"
@@ -19,6 +20,8 @@ func main() {
 	if err != nil {
 		log.Fatal("Error loading .env file")
 	}
+
+	mongdb.InitConnection()
 
 	//Init dependencies
 	service := service.NewUserDomainService()
