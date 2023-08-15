@@ -2,23 +2,32 @@ package mongdb
 
 import (
 	"context"
-
-	"Documentos/github.com/CelsodvJunior/CRUD-GO/src/configuration/logger"
+	"os"
 
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-func InitConnection() {
-	ctx := context.Background()
-	client, err := mongo.Connect(ctx, options.Client().ApplyURI("mongodb://localhost:27017"))
+var (
+	MONGO_URL     = "MONGO_URL"
+	MONGO_USER_DB = "MONGO_USER_DB"
+)
+
+func NewMongDBConnection(
+	ctx context.Context,
+) (*mongo.Database, error) {
+	mongodb_uri := os.Getenv(MONGO_URL)
+	mongodb_database := os.Getenv(MONGO_USER_DB)
+
+	client, err := mongo.Connect(
+		ctx,
+		options.Client().ApplyURI(mongodb_uri))
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 
 	if err := client.Ping(ctx, nil); err != nil {
-		panic(err)
+		return nil, err
 	}
-
-	logger.Info("Managed to connect")
+	return client.Database(mongodb_database), nil
 }
