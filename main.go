@@ -14,14 +14,14 @@ import (
 )
 
 func main() {
-	logger.Info("Abaut to start User app")
+	logger.Info("About to start User app")
 
 	err := godotenv.Load()
 	if err != nil {
 		log.Fatal("Error loading .env file")
 	}
 
-	mongdb.InitConnection()
+	// mongodb.InitConnection()
 
 	//Init dependencies
 	service := service.NewUserDomainService()
